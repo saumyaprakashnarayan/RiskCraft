@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/hero_card_bg"
+    android:padding="16dp"
+    android:layout_marginBottom="12dp">
+
+    <TextView
+        android:id="@+id/positionSymbol"
+        android:text="HDFCBANK"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/positionDetails"
+        android:text="Qty: 20 • Avg: ₹1480"
+        android:textColor="#A0A8B8"
+        android:layout_marginTop="4dp"/>
+
+    <TextView
+        android:id="@+id/positionPnl"
+        android:text="+₹1,200"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:layout_marginTop="6dp"/>
+</LinearLayout>

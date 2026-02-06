@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "264465610052",
+    "project_id": "riskcraft-9c832",
+    "storage_bucket": "riskcraft-9c832.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:264465610052:android:b1fc51b8d4951a704c9311",
+        "android_client_info": {
+          "package_name": "com.example.riskcraft"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCvL6ippzoUsQFx8ZsIxZDFjG1qt-RovM4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
