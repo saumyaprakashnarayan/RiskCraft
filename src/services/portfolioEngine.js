@@ -2,7 +2,7 @@ const { PrismaClient } = require('@prisma/client');
 
 const prisma = new PrismaClient();
 
-/**
+/*
  * Calculate portfolio from trades
  * Returns current holdings, average price, and unrealized P&L
  */

@@ -5,7 +5,7 @@ const gamificationEngine = require('../services/gamificationEngine');
 
 const router = express.Router();
 
-/**
+/*
  * POST /api/trades/execute
  * Execute a trade (BUY or SELL)
  */

@@ -2,7 +2,7 @@ const { PrismaClient } = require('@prisma/client');
 
 const prisma = new PrismaClient();
 
-/**
+/*
  * Award badge to user
  */
 const awardBadge = async (userId, badgeName) => {

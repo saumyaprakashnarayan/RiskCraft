@@ -2,7 +2,7 @@ const { PrismaClient } = require('@prisma/client');
 
 const prisma = new PrismaClient();
 
-/**
+/*
  * Execute a trade (BUY or SELL)
  */
 const executeTrade = async (userId, asset, quantity, price, tradeType, stopLoss = null) => {

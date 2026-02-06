@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs');
 
 const prisma = new PrismaClient();
 
-/**
+/*
  * Create a new user with wallet
  */
 const createUser = async (email, name, password) => {

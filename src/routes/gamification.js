@@ -3,7 +3,7 @@ const gamificationEngine = require('../services/gamificationEngine');
 
 const router = express.Router();
 
-/**
+/*
  * GET /api/gamification/badges
  * Get user's badges
  */

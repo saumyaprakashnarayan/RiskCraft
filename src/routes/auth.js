@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 
 const router = express.Router();
 
-/**
+/*
  * POST /api/auth/register
  * Register a new user
  */
