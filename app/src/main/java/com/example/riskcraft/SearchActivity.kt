@@ -1,21 +1,16 @@
 package com.example.riskcraft
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.EditText
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.riskcraft.network.ApiClient
-import com.example.riskcraft.network.SearchResponse
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class SearchActivity : AppCompatActivity() {
-
-    private val apiKey = "YOUR_API_KEY"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,30 +18,42 @@ class SearchActivity : AppCompatActivity() {
 
         val searchInput = findViewById<EditText>(R.id.searchInput)
         val recyclerView = findViewById<RecyclerView>(R.id.searchRecycler)
+        val backBtn = findViewById<ImageView>(R.id.backBtn)
+
+        backBtn?.setOnClickListener { finish() }
 
         recyclerView.layoutManager = LinearLayoutManager(this)
+
+        // Show all Indian stocks initially
+        val allStocks = IndianMarketData.getAllStockSymbols()
+        showResults(recyclerView, allStocks)
 
         searchInput.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: Editable?) {
-                val query = s.toString()
-                if (query.length > 2) {
-                    ApiClient.api.searchStocks(query, apiKey)
-                        .enqueue(object : Callback<SearchResponse> {
-                            override fun onResponse(
-                                call: Call<SearchResponse>,
-                                response: Response<SearchResponse>
-                            ) {
-                                val list = response.body()?.result ?: emptyList()
-                                recyclerView.adapter =
-                                    SearchAdapter(list) { /* open stock detail */ }
-                            }
-
-                            override fun onFailure(call: Call<SearchResponse>, t: Throwable) {}
-                        })
+                val query = s.toString().uppercase().trim()
+                if (query.isEmpty()) {
+                    showResults(recyclerView, allStocks)
+                } else {
+                    val filtered = allStocks.filter {
+                        it.first.contains(query) || it.second.uppercase().contains(query)
+                    }
+                    showResults(recyclerView, filtered)
                 }
             }
         })
+    }
+
+    private fun showResults(recyclerView: RecyclerView, stocks: List<Pair<String, String>>) {
+        recyclerView.adapter = SearchResultAdapter(stocks) { symbol, name ->
+            val price = IndianMarketData.getStockPrice(symbol)
+            val intent = Intent(this, TradeActivity::class.java).apply {
+                putExtra("symbol", symbol)
+                putExtra("name", name)
+                putExtra("price", price)
+            }
+            startActivity(intent)
+        }
     }
 }

@@ -14,7 +14,9 @@ class PositionsAdapter(
 
     class PositionViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val symbol: TextView = itemView.findViewById(R.id.positionSymbol)
+        val name: TextView = itemView.findViewById(R.id.positionName)
         val details: TextView = itemView.findViewById(R.id.positionDetails)
+        val ltp: TextView = itemView.findViewById(R.id.positionLtp)
         val pnl: TextView = itemView.findViewById(R.id.positionPnl)
     }
 
@@ -28,11 +30,14 @@ class PositionsAdapter(
         val item = positions[position]
 
         holder.symbol.text = item.symbol
-        holder.details.text = "Qty: ${item.quantity} • Avg: ₹${item.avgPrice}"
-        
+        holder.name.text = if (item.name.isNotEmpty()) item.name else item.symbol
+        holder.details.text = "Qty: ${item.quantity} • Avg: ₹${String.format("%,.2f", item.avgPrice)}"
+        holder.ltp.text = String.format("₹%,.2f", item.ltp)
+
         val pnlValue = (item.ltp - item.avgPrice) * item.quantity
-        holder.pnl.text = String.format("₹%.2f", pnlValue)
-        holder.pnl.setTextColor(if (pnlValue >= 0) 0xFF4CAF50.toInt() else 0xFFF44336.toInt())
+        val pnlPercent = if (item.avgPrice > 0) ((item.ltp - item.avgPrice) / item.avgPrice) * 100 else 0.0
+        holder.pnl.text = String.format("%s₹%,.2f (%.1f%%)", if (pnlValue >= 0) "+" else "", pnlValue, pnlPercent)
+        holder.pnl.setTextColor(if (pnlValue >= 0) 0xFF10B981.toInt() else 0xFFEF4444.toInt())
     }
 
     override fun getItemCount(): Int = positions.size

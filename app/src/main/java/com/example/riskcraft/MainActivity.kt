@@ -3,20 +3,19 @@ package com.example.riskcraft
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
     private var isLogin = true
     private var selectedDob: String = ""
-    private val tag = "MainActivity"
     private lateinit var auth: FirebaseAuth
     private lateinit var db: FirebaseFirestore
 
@@ -24,27 +23,20 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         auth = FirebaseAuth.getInstance()
-        db = FirebaseFirestore.getInstance()
+        db = Firebase.firestore
 
         val prefs = getSharedPreferences("user_prefs", MODE_PRIVATE)
         val savedPin = prefs.getString("user_pin", null)
 
-        // Auto-login logic
         val currentUser = auth.currentUser
         if (currentUser != null) {
-            if (currentUser.isEmailVerified) {
-                if (savedPin != null) {
-                    startActivity(Intent(this, PinActivity::class.java))
-                    finish()
-                    return
-                } else {
-                    startActivity(Intent(this, CreatePinActivity::class.java))
-                    finish()
-                    return
-                }
+            if (savedPin != null) {
+                startActivity(Intent(this, PinActivity::class.java))
             } else {
-                auth.signOut()
+                startActivity(Intent(this, CreatePinActivity::class.java))
             }
+            finish()
+            return
         }
 
         setContentView(R.layout.activity_main)
@@ -60,19 +52,15 @@ class MainActivity : AppCompatActivity() {
         val button = findViewById<Button>(R.id.actionButton)
         val switchText = findViewById<TextView>(R.id.switchText)
         val genderSpinner = findViewById<Spinner>(R.id.genderSpinner)
+        val formTitle = findViewById<TextView>(R.id.formTitle)
+        val formSubtitle = findViewById<TextView>(R.id.formSubtitle)
 
-        // Setup Gender Spinner
         val genders = arrayOf("Male", "Female", "Other")
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, genders)
         genderSpinner.adapter = adapter
 
-        // Date of Birth Picker
         dobInput.setOnClickListener {
             val calendar = Calendar.getInstance()
-            val year = calendar.get(Calendar.YEAR)
-            val month = calendar.get(Calendar.MONTH)
-            val day = calendar.get(Calendar.DAY_OF_MONTH)
-
             val datePicker = DatePickerDialog(this, { _, selectedYear, selectedMonth, selectedDay ->
                 val currentYear = Calendar.getInstance().get(Calendar.YEAR)
                 if (currentYear - selectedYear < 18) {
@@ -82,7 +70,7 @@ class MainActivity : AppCompatActivity() {
                     dobInput.setText(selectedDob)
                     dobInput.error = null
                 }
-            }, year, month, day)
+            }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH))
             datePicker.show()
         }
 
@@ -95,28 +83,30 @@ class MainActivity : AppCompatActivity() {
                     Toast.makeText(this, "Enter email and password", Toast.LENGTH_SHORT).show()
                     return@setOnClickListener
                 }
-                
+
+                button.isEnabled = false
+                button.text = "Logging In..."
+
                 auth.signInWithEmailAndPassword(emailStr, passStr)
                     .addOnSuccessListener {
-                        val user = auth.currentUser
-                        if (user != null && user.isEmailVerified) {
-                            Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "Login Successful ✅", Toast.LENGTH_SHORT).show()
+                        // Fetch and cache profile data from Firestore server
+                        // so profile survives app data/cache clears
+                        FirestoreManager.fetchAndCacheProfile(this) {
                             if (savedPin != null) {
                                 startActivity(Intent(this, PinActivity::class.java))
                             } else {
                                 startActivity(Intent(this, CreatePinActivity::class.java))
                             }
                             finish()
-                        } else {
-                            Toast.makeText(this, "Please verify your email link sent to $emailStr", Toast.LENGTH_LONG).show()
-                            auth.signOut()
                         }
                     }
-                    .addOnFailureListener {
-                        Toast.makeText(this, it.message, Toast.LENGTH_SHORT).show()
+                    .addOnFailureListener { e ->
+                        button.isEnabled = true
+                        button.text = "Login"
+                        Toast.makeText(this, "Login failed: ${e.message}", Toast.LENGTH_SHORT).show()
                     }
             } else {
-                // Signup Validation
                 val nameStr = name.text.toString().trim()
                 val contactStr = contact.text.toString().trim()
                 val aadhaarStr = aadhaar.text.toString().trim()
@@ -124,60 +114,107 @@ class MainActivity : AppCompatActivity() {
                 val occupationStr = occupation.text.toString().trim()
                 val genderStr = genderSpinner.selectedItem.toString()
 
-                if (nameStr.isEmpty() || contactStr.isEmpty() || aadhaarStr.length != 12 || 
-                    panStr.length != 10 || occupationStr.isEmpty() || selectedDob.isEmpty() || 
-                    emailStr.isEmpty() || passStr.isEmpty()) {
-                    Toast.makeText(this, "Please fill all details correctly", Toast.LENGTH_SHORT).show()
+                // Per-field validation with specific error messages
+                var hasError = false
+
+                if (nameStr.isEmpty()) {
+                    name.error = "Name is required"
+                    hasError = true
+                }
+                if (contactStr.length != 10) {
+                    contact.error = "Enter valid 10-digit phone number"
+                    hasError = true
+                }
+                if (aadhaarStr.length != 12) {
+                    aadhaar.error = "Enter valid 12-digit Aadhaar number"
+                    hasError = true
+                }
+                if (panStr.length != 10) {
+                    pan.error = "Enter valid 10-character PAN (e.g. ABCDE1234F)"
+                    hasError = true
+                }
+                if (occupationStr.isEmpty()) {
+                    occupation.error = "Occupation is required"
+                    hasError = true
+                }
+                if (selectedDob.isEmpty()) {
+                    dobInput.error = "Tap to select your date of birth"
+                    hasError = true
+                }
+                if (emailStr.isEmpty()) {
+                    email.error = "Email is required"
+                    hasError = true
+                }
+                if (passStr.length < 6) {
+                    password.error = "Password must be at least 6 characters"
+                    hasError = true
+                }
+
+                if (hasError) {
+                    Toast.makeText(this, "Please fix the highlighted fields", Toast.LENGTH_LONG).show()
                     return@setOnClickListener
                 }
 
-                // Create account and send verification link
+                // Create account directly with email/password (no OTP)
+                button.isEnabled = false
+                button.text = "Creating Account..."
+
                 auth.createUserWithEmailAndPassword(emailStr, passStr)
-                    .addOnCompleteListener { task ->
-                        if (task.isSuccessful) {
-                            val user = auth.currentUser
-                            
-                            // 1. Send verification email link
-                            user?.sendEmailVerification()?.addOnCompleteListener { verifyTask ->
-                                if (verifyTask.isSuccessful) {
-                                    Toast.makeText(this, "Verification link sent to $emailStr", Toast.LENGTH_LONG).show()
+                    .addOnSuccessListener {
+                        val uid = auth.currentUser?.uid ?: ""
+                        val userData = hashMapOf(
+                            "uid" to uid,
+                            "name" to nameStr,
+                            "phone" to contactStr,
+                            "aadhaar" to aadhaarStr,
+                            "pan" to panStr,
+                            "occupation" to occupationStr,
+                            "gender" to genderStr,
+                            "dob" to selectedDob,
+                            "email" to emailStr,
+                            "walletBalance" to WalletManager.STARTING_BALANCE,
+                            "totalProfit" to 0.0,
+                            "totalTrades" to 0,
+                            "completedChallenges" to emptyList<String>(),
+                            "joinedAt" to com.google.firebase.Timestamp.now()
+                        )
+
+                        // Write to Firestore — use addOnCompleteListener so we
+                        // proceed regardless of server confirmation (data syncs later via offline cache)
+                        db.collection("users").document(uid).set(userData)
+                            .addOnCompleteListener { task ->
+                                if (task.isSuccessful) {
+                                    android.util.Log.d("MainActivity", "User data saved to Firestore")
+                                } else {
+                                    android.util.Log.w("MainActivity", "Firestore write queued offline: ${task.exception?.message}")
                                 }
                             }
 
-                            // 2. Store user data in Firestore
-                            val userData = hashMapOf(
-                                "uid" to user?.uid,
-                                "name" to nameStr,
-                                "phone" to contactStr,
-                                "aadhaar" to aadhaarStr,
-                                "pan" to panStr,
-                                "occupation" to occupationStr,
-                                "gender" to genderStr,
-                                "dob" to selectedDob,
-                                "email" to emailStr
-                            )
+                        // Don't wait for Firestore write — proceed immediately
+                        auth.currentUser?.sendEmailVerification()
+                        auth.signOut()
+                        Toast.makeText(this, "Account Created! 🎉 Please sign in.", Toast.LENGTH_SHORT).show()
 
-                            user?.uid?.let { uid ->
-                                db.collection("users").document(uid)
-                                    .set(userData)
-                                    .addOnSuccessListener {
-                                        Log.d(tag, "User profile created in Firestore")
-                                        auth.signOut()
-                                        Toast.makeText(this, "Account created. Verify email link to login.", Toast.LENGTH_LONG).show()
-                                        
-                                        // Toggle back to login
-                                        isLogin = true
-                                        updateUI()
-                                    }
-                            }
-                        } else {
-                            val exception = task.exception
-                            if (exception is FirebaseAuthUserCollisionException) {
-                                Toast.makeText(this, "Account already exists.", Toast.LENGTH_SHORT).show()
-                            } else {
-                                Toast.makeText(this, "Error: ${exception?.message}", Toast.LENGTH_LONG).show()
-                            }
-                        }
+                        // Switch to login mode
+                        isLogin = true
+                        updateUI()
+
+                        // Clear all fields
+                        findViewById<EditText>(R.id.emailInput).text.clear()
+                        findViewById<EditText>(R.id.passwordInput).text.clear()
+                        findViewById<EditText>(R.id.nameInput).text.clear()
+                        findViewById<EditText>(R.id.contactInput).text.clear()
+                        findViewById<EditText>(R.id.aadhaarInput).text.clear()
+                        findViewById<EditText>(R.id.panInput).text.clear()
+                        findViewById<EditText>(R.id.occupationInput).text.clear()
+                        findViewById<EditText>(R.id.dobInput).text.clear()
+                        button.isEnabled = true
+                        button.text = "Sign In"
+                    }
+                    .addOnFailureListener { e ->
+                        button.isEnabled = true
+                        button.text = "Sign Up"
+                        Toast.makeText(this, "Signup failed: ${e.message}", Toast.LENGTH_LONG).show()
                     }
             }
         }
@@ -186,6 +223,8 @@ class MainActivity : AppCompatActivity() {
             isLogin = !isLogin
             updateUI()
         }
+
+        updateUI()
     }
 
     private fun updateUI() {
@@ -198,6 +237,8 @@ class MainActivity : AppCompatActivity() {
         val genderSpinner = findViewById<Spinner>(R.id.genderSpinner)
         val button = findViewById<Button>(R.id.actionButton)
         val switchText = findViewById<TextView>(R.id.switchText)
+        val formTitle = findViewById<TextView>(R.id.formTitle)
+        val formSubtitle = findViewById<TextView>(R.id.formSubtitle)
 
         val visibility = if (isLogin) View.GONE else View.VISIBLE
         name.visibility = visibility
@@ -208,7 +249,16 @@ class MainActivity : AppCompatActivity() {
         dobInput.visibility = visibility
         genderSpinner.visibility = visibility
 
-        button.text = if (isLogin) "Login" else "Sign Up"
-        switchText.text = if (isLogin) "Don't have an account? Sign Up" else "Already have an account? Login"
+        if (isLogin) {
+            formTitle.text = "Welcome Back"
+            formSubtitle.text = "Sign in to continue trading"
+            button.text = "Sign In"
+            switchText.text = "Don't have an account? Sign Up"
+        } else {
+            formTitle.text = "Create Account"
+            formSubtitle.text = "Join RiskCraft and start trading"
+            button.text = "Sign Up"
+            switchText.text = "Already have an account? Sign In"
+        }
     }
 }

@@ -4,29 +4,76 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
-    android:padding="24dp">
+    android:padding="28dp"
+    android:background="@drawable/gradient_bg">
+
+    <!-- Icon -->
+    <LinearLayout
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:background="@drawable/wallet_card_bg"
+        android:gravity="center"
+        android:layout_marginBottom="24dp"
+        android:elevation="8dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="🔒"
+            android:textSize="32sp"/>
+    </LinearLayout>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Create 4-Digit PIN"
-        android:textSize="20sp"
+        android:text="Create Security PIN"
+        android:textColor="@color/text_primary"
+        android:textSize="24sp"
         android:textStyle="bold"
-        android:layout_marginBottom="24dp"/>
+        android:layout_marginBottom="8dp"/>
 
-    <EditText
-        android:id="@+id/createPinInput"
-        android:layout_width="200dp"
-        android:layout_height="50dp"
-        android:inputType="numberPassword"
-        android:maxLength="4"
-        android:gravity="center"
-        android:textSize="22sp"/>
-
-    <Button
-        android:id="@+id/savePinBtn"
-        android:layout_width="200dp"
+    <TextView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Save PIN"
-        android:layout_marginTop="24dp"/>
+        android:text="Set a 4-digit PIN to secure your account"
+        android:textColor="@color/text_secondary"
+        android:textSize="14sp"
+        android:gravity="center"
+        android:layout_marginBottom="36dp"/>
+
+    <!-- PIN Card -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/hero_card_bg"
+        android:orientation="vertical"
+        android:padding="32dp"
+        android:gravity="center"
+        android:elevation="4dp">
+
+        <EditText
+            android:id="@+id/createPinInput"
+            android:layout_width="180dp"
+            android:layout_height="60dp"
+            android:inputType="numberPassword"
+            android:maxLength="4"
+            android:gravity="center"
+            android:letterSpacing="1.0"
+            android:textSize="28sp"
+            android:textColor="@color/text_primary"
+            android:textColorHint="@color/text_hint"
+            android:hint="• • • •"
+            android:background="@drawable/input_bg"
+            android:layout_marginBottom="28dp"/>
+
+        <Button
+            android:id="@+id/savePinBtn"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:text="Set PIN"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:textColor="@color/text_primary"
+            android:background="@drawable/button_bg"
+            android:elevation="4dp"/>
+    </LinearLayout>
 </LinearLayout>

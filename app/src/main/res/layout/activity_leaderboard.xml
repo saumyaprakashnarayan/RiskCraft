@@ -7,26 +7,27 @@
     android:background="@drawable/gradient_bg"
     android:padding="16dp">
 
+    <!-- Top Bar -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp">
+        android:layout_marginBottom="20dp">
 
         <ImageView
             android:id="@+id/backBtn"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
             android:background="@drawable/circle_bg"
-            android:padding="8dp"
-            android:src="@android:drawable/ic_menu_revert"
-            app:tint="@color/white" />
+            android:padding="10dp"
+            android:src="@drawable/ic_back_arrow"
+            app:tint="@color/text_primary" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="Leaderboard"
-            android:textColor="@color/white"
+            android:text="🏆 Leaderboard"
+            android:textColor="@color/text_primary"
             android:textSize="20sp"
             android:textStyle="bold" />
     </RelativeLayout>
@@ -36,5 +37,4 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
-
 </LinearLayout>

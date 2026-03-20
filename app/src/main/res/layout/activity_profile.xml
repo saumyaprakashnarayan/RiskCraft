@@ -10,31 +10,31 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="24dp">
+        android:padding="20dp">
 
+        <!-- Top Bar -->
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="32dp">
+            android:layout_marginBottom="28dp">
+
+            <ImageView
+                android:id="@+id/backBtn"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:background="@drawable/circle_bg"
+                android:padding="10dp"
+                android:src="@drawable/ic_back_arrow"
+                app:tint="@color/text_primary" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
+                android:layout_centerInParent="true"
                 android:text="My Profile"
-                android:textColor="@color/white"
-                android:textSize="24sp"
+                android:textColor="@color/text_primary"
+                android:textSize="20sp"
                 android:textStyle="bold" />
-
-            <ImageView
-                android:id="@+id/backBtn"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_alignParentEnd="true"
-                android:background="@drawable/circle_bg"
-                android:padding="8dp"
-                android:src="@android:drawable/ic_menu_close_clear_cancel"
-                app:tint="@color/white" />
         </RelativeLayout>
 
         <!-- Profile Picture Section -->
@@ -42,12 +42,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginBottom="32dp">
+            android:layout_marginBottom="28dp">
 
             <ImageView
                 android:id="@+id/profileImage"
-                android:layout_width="120dp"
-                android:layout_height="120dp"
+                android:layout_width="110dp"
+                android:layout_height="110dp"
                 android:background="@drawable/circle_bg"
                 android:padding="4dp"
                 android:scaleType="centerCrop"
@@ -55,33 +55,33 @@
 
             <ImageView
                 android:id="@+id/editImageBtn"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
+                android:layout_width="34dp"
+                android:layout_height="34dp"
                 android:layout_gravity="bottom|end"
-                android:background="@drawable/circle_bg"
-                android:backgroundTint="#8A7CFF"
-                android:padding="6dp"
+                android:background="@drawable/wallet_card_bg"
+                android:padding="7dp"
                 android:src="@android:drawable/ic_menu_camera"
-                app:tint="@color/white" />
+                app:tint="@color/text_primary" />
         </FrameLayout>
 
+        <!-- Personal Details Card -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/hero_card_bg"
             android:orientation="vertical"
-            android:padding="20dp"
+            android:padding="22dp"
             android:elevation="4dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="PERSONAL DETAILS"
-                android:textColor="#8A7CFF"
-                android:textSize="12sp"
+                android:textColor="@color/accent_primary_light"
+                android:textSize="11sp"
                 android:textStyle="bold"
-                android:letterSpacing="0.1"
-                android:layout_marginBottom="16dp"/>
+                android:letterSpacing="0.15"
+                android:layout_marginBottom="18dp"/>
 
             <include layout="@layout/profile_info_item" android:id="@+id/nameItem" />
             <include layout="@layout/profile_info_item" android:id="@+id/dobItem" />
@@ -91,29 +91,74 @@
             <include layout="@layout/profile_info_item" android:id="@+id/panItem" />
             <include layout="@layout/profile_info_item" android:id="@+id/emailItem" />
             <include layout="@layout/profile_info_item" android:id="@+id/phoneItem" />
-
         </LinearLayout>
 
+        <!-- Wallet Info Card -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/hero_card_bg"
+            android:orientation="vertical"
+            android:padding="22dp"
+            android:elevation="4dp"
+            android:layout_marginTop="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="WALLET INFO"
+                android:textColor="@color/accent_primary_light"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.15"
+                android:layout_marginBottom="12dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="RC Coins Balance"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="14sp"/>
+                <TextView
+                    android:id="@+id/walletBalanceText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="₹10,00,000"
+                    android:textColor="@color/success"
+                    android:textSize="14sp"
+                    android:textStyle="bold"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Buttons -->
         <Button
             android:id="@+id/changePinBtn"
             android:layout_width="match_parent"
             android:layout_height="54dp"
             android:text="Change Security PIN"
-            android:textColor="#0B0E11"
+            android:textColor="@color/text_primary"
             android:textStyle="bold"
+            android:textSize="15sp"
             android:background="@drawable/button_bg"
-            android:layout_marginTop="32dp"/>
+            android:layout_marginTop="28dp"
+            android:elevation="4dp"/>
 
         <Button
             android:id="@+id/logoutBtn"
             android:layout_width="match_parent"
             android:layout_height="54dp"
             android:text="Log Out"
-            android:textColor="#F44336"
+            android:textColor="@color/error"
             android:textStyle="bold"
+            android:textSize="15sp"
             android:background="@drawable/input_bg"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="40dp"/>
+            android:layout_marginTop="14dp"
+            android:layout_marginBottom="32dp"/>
 
     </LinearLayout>
 </ScrollView>

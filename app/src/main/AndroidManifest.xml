@@ -30,6 +30,11 @@
         <activity android:name=".ProfileActivity" />
         <activity android:name=".OrdersActivity"/>
         <activity android:name=".PositionsActivity"/>
+        <activity android:name=".TradeActivity"/>
+        <activity android:name=".WalletActivity"/>
+        <activity android:name=".SearchActivity"/>
+        <activity android:name=".LeaderboardActivity"/>
+        <activity android:name=".GeminiChatActivity"/>
 
     </application>
 

@@ -1,11 +1,13 @@
 package com.example.riskcraft
 
 import android.os.Bundle
+import android.view.View
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.riskcraft.adapter.OrdersAdapter
-import com.example.riskcraft.model.Order
 
 class OrdersActivity : AppCompatActivity() {
 
@@ -13,17 +15,21 @@ class OrdersActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_orders)
 
+        findViewById<ImageView>(R.id.backBtn)?.setOnClickListener { finish() }
+
         val recyclerView = findViewById<RecyclerView>(R.id.ordersRecyclerView)
+        val emptyText = findViewById<TextView>(R.id.emptyText)
+
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        // Dummy orders (later replaced by live / Firebase data)
-        val orders = listOf(
-            Order("RELIANCE", "BUY", 10, 2450.0, "Completed"),
-            Order("TCS", "SELL", 5, 3820.0, "Pending"),
-            Order("HDFCBANK", "BUY", 20, 1480.0, "Completed"),
-            Order("INFY", "SELL", 10, 1560.0, "Rejected")
-        )
-
-        recyclerView.adapter = OrdersAdapter(orders)
+        val orders = WalletManager.getOrders(this)
+        if (orders.isEmpty()) {
+            emptyText?.visibility = View.VISIBLE
+            recyclerView.visibility = View.GONE
+        } else {
+            emptyText?.visibility = View.GONE
+            recyclerView.visibility = View.VISIBLE
+            recyclerView.adapter = OrdersAdapter(orders)
+        }
     }
 }

@@ -1,7 +1,6 @@
 package com.example.riskcraft
 
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
@@ -16,23 +15,21 @@ class PinActivity : AppCompatActivity() {
 
         val pinInput = findViewById<EditText>(R.id.pinInput)
         val pinBtn = findViewById<Button>(R.id.pinBtn)
-
         val prefs = getSharedPreferences("user_prefs", MODE_PRIVATE)
         val savedPin = prefs.getString("user_pin", null)
 
         pinBtn.setOnClickListener {
             val enteredPin = pinInput.text.toString()
-
             if (enteredPin.length != 4) {
                 Toast.makeText(this, "Enter 4-digit PIN", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-
             if (enteredPin == savedPin) {
                 startActivity(Intent(this, DashboardActivity::class.java))
                 finish()
             } else {
-                Toast.makeText(this, "Wrong PIN", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Wrong PIN ❌", Toast.LENGTH_SHORT).show()
+                pinInput.text.clear()
             }
         }
     }

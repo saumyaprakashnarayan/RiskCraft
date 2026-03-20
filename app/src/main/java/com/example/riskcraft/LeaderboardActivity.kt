@@ -1,12 +1,14 @@
 package com.example.riskcraft
 
 import android.os.Bundle
+import android.view.View
 import android.widget.ImageView
+import android.widget.ProgressBar
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.riskcraft.adapter.LeaderboardAdapter
-import com.example.riskcraft.model.LeaderboardEntry
 
 class LeaderboardActivity : AppCompatActivity() {
 
@@ -20,15 +22,14 @@ class LeaderboardActivity : AppCompatActivity() {
         val recyclerView = findViewById<RecyclerView>(R.id.leaderboardRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        // Sample data (replace with real data from Firestore)
-        val leaderboard = listOf(
-            LeaderboardEntry("1", "Alice", "", 12450.0, 1),
-            LeaderboardEntry("2", "Bob", "", 9800.0, 2),
-            LeaderboardEntry("3", "Charlie", "", 7500.0, 3),
-            LeaderboardEntry("4", "David", "", 5200.0, 4),
-            LeaderboardEntry("5", "Eve", "", 3100.0, 5)
-        )
+        // Sync current user's wallet data to Firestore first
+        FirestoreManager.syncWalletToCloud(this)
 
-        recyclerView.adapter = LeaderboardAdapter(leaderboard)
+        // Fetch leaderboard from Firestore (falls back to demo data)
+        FirestoreManager.fetchLeaderboard { entries ->
+            runOnUiThread {
+                recyclerView.adapter = LeaderboardAdapter(entries)
+            }
+        }
     }
 }

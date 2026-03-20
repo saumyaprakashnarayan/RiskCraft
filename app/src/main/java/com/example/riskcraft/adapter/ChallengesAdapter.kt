@@ -1,16 +1,20 @@
 package com.example.riskcraft.adapter
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.riskcraft.R
 import com.example.riskcraft.model.Challenge
 
-class ChallengesAdapter(private val challenges: List<Challenge>) :
-    RecyclerView.Adapter<ChallengesAdapter.ChallengeViewHolder>() {
+class ChallengesAdapter(
+    private val challenges: List<Challenge>,
+    private val completedIds: List<String> = emptyList()
+) : RecyclerView.Adapter<ChallengesAdapter.ChallengeViewHolder>() {
 
     class ChallengeViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val title: TextView = view.findViewById(R.id.challengeTitle)
@@ -30,8 +34,19 @@ class ChallengesAdapter(private val challenges: List<Challenge>) :
         holder.title.text = challenge.title
         holder.desc.text = challenge.description
         holder.reward.text = "Reward: ${challenge.reward}"
-        holder.joinBtn.setOnClickListener {
-            // Handle join logic
+
+        val isCompleted = completedIds.contains(challenge.id)
+        if (isCompleted) {
+            holder.joinBtn.text = "✅ Done"
+            holder.joinBtn.setBackgroundColor(Color.parseColor("#10B981"))
+            holder.joinBtn.isEnabled = false
+        } else {
+            holder.joinBtn.text = "Join"
+            holder.joinBtn.setBackgroundColor(Color.parseColor("#7C3AED"))
+            holder.joinBtn.isEnabled = true
+            holder.joinBtn.setOnClickListener {
+                Toast.makeText(holder.itemView.context, "Keep trading to complete '${challenge.title}'!", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 

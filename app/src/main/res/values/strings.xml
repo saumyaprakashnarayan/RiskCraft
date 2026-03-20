@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">RiskCraft</string>
+    <string name="tagline">Smart Trading Simulator</string>
+    <string name="wallet_currency">RC Coins</string>
+    <string name="starting_balance">₹10,00,000</string>
+    <string name="indian_market">Indian Market</string>
+    <string name="crypto_market">Cryptocurrency</string>
+    <string name="market_indices">Market Indices</string>
+    <string name="quick_actions">Quick Actions</string>
 </resources>
