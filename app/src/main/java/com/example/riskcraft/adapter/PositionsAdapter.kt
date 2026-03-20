@@ -1,11 +1,13 @@
 package com.example.riskcraft.adapter
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.riskcraft.R
+import com.example.riskcraft.TradeActivity
 import com.example.riskcraft.model.Position
 
 class PositionsAdapter(
@@ -18,6 +20,7 @@ class PositionsAdapter(
         val details: TextView = itemView.findViewById(R.id.positionDetails)
         val ltp: TextView = itemView.findViewById(R.id.positionLtp)
         val pnl: TextView = itemView.findViewById(R.id.positionPnl)
+        val sellBtn: TextView = itemView.findViewById(R.id.sellPositionBtn)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PositionViewHolder {
@@ -38,6 +41,17 @@ class PositionsAdapter(
         val pnlPercent = if (item.avgPrice > 0) ((item.ltp - item.avgPrice) / item.avgPrice) * 100 else 0.0
         holder.pnl.text = String.format("%s₹%,.2f (%.1f%%)", if (pnlValue >= 0) "+" else "", pnlValue, pnlPercent)
         holder.pnl.setTextColor(if (pnlValue >= 0) 0xFF10B981.toInt() else 0xFFEF4444.toInt())
+
+        // Handle Sell Button click
+        holder.sellBtn.setOnClickListener {
+            val context = holder.itemView.context
+            val intent = Intent(context, TradeActivity::class.java).apply {
+                putExtra("symbol", item.symbol)
+                putExtra("name", item.name)
+                putExtra("price", item.ltp)
+            }
+            context.startActivity(intent)
+        }
     }
 
     override fun getItemCount(): Int = positions.size

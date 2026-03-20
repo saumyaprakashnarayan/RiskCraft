@@ -2,70 +2,102 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:background="@drawable/hero_card_bg"
     android:padding="16dp"
-    android:layout_marginBottom="10dp"
-    android:gravity="center_vertical">
+    android:layout_marginBottom="10dp">
 
-    <!-- Stock Info -->
     <LinearLayout
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:orientation="vertical">
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
 
-        <TextView
-            android:id="@+id/positionSymbol"
+        <!-- Stock Info -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/positionSymbol"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="HDFCBANK"
+                android:textColor="@color/text_primary"
+                android:textSize="16sp"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/positionName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="HDFC Bank Ltd"
+                android:textColor="@color/text_tertiary"
+                android:textSize="12sp"
+                android:layout_marginTop="2dp"/>
+
+            <TextView
+                android:id="@+id/positionDetails"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Qty: 20 • Avg: ₹1480"
+                android:textColor="@color/text_secondary"
+                android:textSize="13sp"
+                android:layout_marginTop="6dp"/>
+        </LinearLayout>
+
+        <!-- P&L Info -->
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="HDFCBANK"
-            android:textColor="@color/text_primary"
-            android:textSize="16sp"
-            android:textStyle="bold"/>
+            android:orientation="vertical"
+            android:gravity="end">
 
-        <TextView
-            android:id="@+id/positionName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="HDFC Bank Ltd"
-            android:textColor="@color/text_tertiary"
-            android:textSize="12sp"
-            android:layout_marginTop="2dp"/>
+            <TextView
+                android:id="@+id/positionLtp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="₹1,540.00"
+                android:textColor="@color/text_primary"
+                android:textSize="15sp"
+                android:textStyle="bold"/>
 
-        <TextView
-            android:id="@+id/positionDetails"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Qty: 20 • Avg: ₹1480"
-            android:textColor="@color/text_secondary"
-            android:textSize="13sp"
-            android:layout_marginTop="6dp"/>
+            <TextView
+                android:id="@+id/positionPnl"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="+₹1,200"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:layout_marginTop="4dp"/>
+        </LinearLayout>
     </LinearLayout>
 
-    <!-- P&L Info -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/divider"
+        android:layout_marginVertical="12dp"/>
+
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:orientation="horizontal"
         android:gravity="end">
 
         <TextView
-            android:id="@+id/positionLtp"
+            android:id="@+id/sellPositionBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="₹1,540.00"
-            android:textColor="@color/text_primary"
-            android:textSize="15sp"
-            android:textStyle="bold"/>
-
-        <TextView
-            android:id="@+id/positionPnl"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="+₹1,200"
-            android:textSize="14sp"
+            android:text="SELL TO CLOSE"
+            android:textColor="@color/error_light"
+            android:textSize="12sp"
             android:textStyle="bold"
-            android:layout_marginTop="4dp"/>
+            android:background="@drawable/input_bg"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="8dp"
+            android:letterSpacing="0.05"/>
     </LinearLayout>
 </LinearLayout>
