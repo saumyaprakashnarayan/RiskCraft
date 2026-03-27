@@ -31,7 +31,7 @@ class GeminiChatActivity : AppCompatActivity() {
     private lateinit var suggestionsContainer: LinearLayout
 
     // TODO: Replace with your actual Gemini API key
-    private val GEMINI_API_KEY = "AIzaSyBJ2Ta5F_kmYhyTkdR_HgHmXdaI6nEmBhA"
+    private val GEMINI_API_KEY = 
 
     private val generativeModel by lazy {
         GenerativeModel(

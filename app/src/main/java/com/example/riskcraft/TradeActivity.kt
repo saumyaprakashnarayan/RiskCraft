@@ -63,7 +63,7 @@ class TradeActivity : AppCompatActivity() {
     }
 
     private fun fetchCryptoPrice() {
-        val apiKey = "d62id0pr01qlugeq660gd62id0pr01qlugeq6610"
+        val apiKey = 
         ApiClient.api.getQuote(apiSymbol, apiKey).enqueue(object : Callback<MarketResponse> {
             override fun onResponse(call: Call<MarketResponse>, response: Response<MarketResponse>) {
                 val data = response.body()

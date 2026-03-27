@@ -27,7 +27,7 @@ import java.util.Calendar
 
 class DashboardActivity : AppCompatActivity() {
 
-    private val API_KEY = "d62id0pr01qlugeq660gd62id0pr01qlugeq6610"
+    private val API_KEY = 
     private lateinit var auth: FirebaseAuth
     private lateinit var db: FirebaseFirestore
 
